@@ -16,7 +16,7 @@ Alpine.data('staffSearch', () => ({
             this.results = await response.json(); this.message = 'No matches. You can enter the full name manually.';
         } catch (error) { if (error.name !== 'AbortError') this.message = error.message; }
     },
-    choose(person) { this.$el.querySelector('input').value = person.name; this.open = false; },
+    choose(person) { this.$refs.input.value = person.name; this.open = false; this.$refs.input.focus(); },
     destroy() { this.controller?.abort(); },
 }));
 

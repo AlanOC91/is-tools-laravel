@@ -95,6 +95,11 @@
     .page-heading h1 { @apply text-[28px] font-semibold tracking-[-0.035em]; }
     .page-heading p { @apply mt-2 text-sm text-slate-500 leading-6; }
     .input { @apply w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-sm text-slate-700 placeholder:text-slate-400 focus:border-hospital-500 focus:ring-2 focus:ring-hospital-600/10 focus:outline-none transition-colors; }
+    .autocomplete { @apply absolute inset-x-0 top-full z-20 mt-1 max-h-64 overflow-y-auto overscroll-contain rounded-lg border border-hospital-200 bg-white p-1 shadow-lg shadow-slate-900/15; }
+    .autocomplete button { @apply flex w-full flex-col items-start gap-0.5 rounded-md px-3 py-2.5 text-left text-sm text-slate-800 hover:bg-hospital-50 focus:bg-hospital-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-hospital-600; overflow-wrap:anywhere; }
+    .autocomplete button strong { @apply font-semibold; }
+    .autocomplete button small { @apply text-xs text-slate-600; }
+    .autocomplete > p { @apply px-3 py-3 text-sm leading-5 text-slate-600; }
     .search-box { @apply relative; }
     .search-box>svg { @apply absolute left-3 top-3.5 size-4 text-slate-400; }
     .search-box input { @apply pl-10; }
