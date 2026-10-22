@@ -1,0 +1,20 @@
+# Local verification only. This database has no relationship to production.
+name: sjl-is-tools-verify
+services:
+  database:
+    image: mariadb:10.11
+    environment:
+      MARIADB_DATABASE: is_tools
+      MARIADB_ROOT_PASSWORD: verification-only
+    ports:
+      - "127.0.0.1:33371:3306"
+    volumes:
+      - verification-db:/var/lib/mysql
+      - ./is_tools.sql:/docker-entrypoint-initdb.d/001-legacy.sql:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+volumes:
+  verification-db:

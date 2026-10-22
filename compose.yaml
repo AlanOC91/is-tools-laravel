@@ -1,0 +1,63 @@
+name: sjl-is-tools
+
+x-application: &application
+  image: sjl-is-tools:latest
+  build:
+    context: .
+  restart: unless-stopped
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+  volumes:
+    - ${IS_TOOLS_ENV_FILE:-./.env}:/var/www/html/.env:ro
+    - ./documents:/var/www/html/documents
+    - ./storage:/var/www/html/storage
+    - ./ssl:/etc/apache2/ssl:ro
+
+services:
+  migrate:
+    <<: *application
+    command: ["php", "artisan", "migrate", "--force", "--no-interaction"]
+    restart: "no"
+    healthcheck:
+      disable: true
+
+  web:
+    <<: *application
+    ports:
+      - "${DOCKER_HTTPS_PORT:-3071}:443"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  queue:
+    <<: *application
+    command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=3", "--timeout=100"]
+    healthcheck:
+      disable: true
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  scheduler:
+    <<: *application
+    command: ["php", "artisan", "schedule:work"]
+    healthcheck:
+      disable: true
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    restart: unless-stopped
+    command: ["gotenberg", "--chromium-disable-javascript=true", "--chromium-deny-list=^https?://"]
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
