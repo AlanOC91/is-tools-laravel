@@ -87,6 +87,24 @@ class WorkflowTest extends TestCase
         }
     }
 
+    public function test_page_headings_do_not_double_escape_ampersands(): void
+    {
+        $this->actingAs($this->staff());
+        foreach (['/meetings' => 'Meetings &amp; teaching', '/healthwellbeing' => 'Health &amp; wellbeing'] as $url => $heading) {
+            $this->get($url)->assertOk()
+                ->assertSee('<h1>'.$heading.'</h1>', false)
+                ->assertDontSee('&amp;amp;', false);
+        }
+    }
+
+    public function test_page_headings_still_escape_untrusted_titles(): void
+    {
+        $title = '<script>alert("unsafe")</script> & teaching';
+        $this->blade('<x-page-heading :title="$title" />', compact('title'))
+            ->assertSee('<h1>'.e($title).'</h1>', false)
+            ->assertDontSee('<script>', false);
+    }
+
     public function test_guest_and_staff_cannot_access_admin_data_or_submit_restricted_forms(): void
     {
         $this->post('/forms/software', $this->payload('software'))->assertForbidden();
