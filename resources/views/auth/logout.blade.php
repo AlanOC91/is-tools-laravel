@@ -1,0 +1,1 @@
+<x-layout title="Sign out"><div class="card max-w-lg p-8 mx-auto"><h1 class="text-2xl font-semibold mb-4">Sign out of IS Tools?</h1><form action="{{ route('logout') }}" method="post">@csrf<div class="flex gap-3"><button class="btn btn-primary">Sign out</button><a class="btn btn-white" href="{{ route('home') }}">Cancel</a></div></form></div></x-layout>

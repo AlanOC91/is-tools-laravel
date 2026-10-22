@@ -1,0 +1,10 @@
+# docker compose -f compose.yaml -f compose.folders.example.yaml up -d
+# Set DEPARTMENT_FOLDERS_HOST_PATH to the host's mounted Depts directory.
+# Set DEPARTMENT_FOLDERS_PATH=/mnt/department-folders in the application .env.
+services:
+  web:
+    volumes:
+      - type: bind
+        source: ${DEPARTMENT_FOLDERS_HOST_PATH:?Set the host directory containing department folders}
+        target: /mnt/department-folders
+        read_only: true

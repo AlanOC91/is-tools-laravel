@@ -1,6 +1,7 @@
 import Alpine from 'alpinejs';
 import SignaturePad from 'signature_pad';
-import { createIcons, icons } from 'lucide';
+import { createIcons, Cross, LayoutDashboard, Files, Inbox, UsersRound, ChartNoAxesCombined, Grid2x2, ListChecks, Database, Mail, Archive, PanelsTopLeft, Headset, ArrowUpRight, Info, Menu, LogOut, LogIn, ArrowRight, ShieldCheck, Check, UserRoundPlus, ScanLine, FlaskConical, FolderKey, Laptop, AppWindow, BadgePlus, ArrowRightLeft, UserRoundMinus, ShieldAlert, CircleCheck, CircleAlert, Search, ArrowLeft, UserRound, FileDown, Plus, X, Printer, Download, Presentation, FileText, HeartHandshake, LockKeyhole, HeartPulse, BedDouble, FileSearch, Pill, Contact, MessageSquare, FileHeart, Images, KeyRound, MailWarning, Route, MonitorSmartphone, Clock3, Send } from 'lucide';
+const icons = { Cross, LayoutDashboard, Files, Inbox, UsersRound, ChartNoAxesCombined, Grid2x2, ListChecks, Database, Mail, Archive, PanelsTopLeft, Headset, ArrowUpRight, Info, Menu, LogOut, LogIn, ArrowRight, ShieldCheck, Check, UserRoundPlus, ScanLine, FlaskConical, FolderKey, Laptop, AppWindow, BadgePlus, ArrowRightLeft, UserRoundMinus, ShieldAlert, CircleCheck, CircleAlert, Search, ArrowLeft, UserRound, FileDown, Plus, X, Printer, Download, Presentation, FileText, HeartHandshake, LockKeyhole, HeartPulse, BedDouble, FileSearch, Pill, Contact, MessageSquare, FileHeart, Images, KeyRound, MailWarning, Route, MonitorSmartphone, Clock3, Send };
 
 Alpine.data('staffSearch', () => ({
     open: false, results: [], message: '', controller: null,
@@ -27,7 +28,7 @@ Alpine.data('signaturePad', () => ({
         const resize = () => {
             const canvas = this.$refs.canvas;
             const strokes = this.pad.toData();
-            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            const ratio = Math.min(Math.max(window.devicePixelRatio || 1, 1), 2);
             canvas.width = canvas.offsetWidth * ratio; canvas.height = canvas.offsetHeight * ratio;
             canvas.getContext('2d').scale(ratio, ratio);
             this.pad.clear(); if (strokes.length) this.pad.fromData(strokes); this.sync();

@@ -33,6 +33,9 @@ class SubmissionService
                 $message = '<p><strong>'.e($form['title']).'</strong></p>';
                 if ($actor) {
                     $message .= '<p>Submitted by: '.e($actor->name).'</p>';
+                    if ($actor->email) {
+                        $message .= '<p>Requester email: '.e($actor->email).'</p>';
+                    }
                 }
                 foreach ($form['fields'] as $key => $field) {
                     $value = $data[$key] ?? null;
@@ -49,13 +52,18 @@ class SubmissionService
                     Storage::disk('documents')->put($path, base64_decode(substr($signature, 22), true));
                     $request->signature()->create(['type' => $slug, 'sigSlug' => $sigSlug]);
                 }
-                $request->submission()->create(['form' => $slug, 'payload' => $data, 'signature_path' => $path]);
+                $payload = $data + ['_submitted_by' => $actor?->name, '_submitted_by_email' => $actor?->email];
+                $request->submission()->create(['form' => $slug, 'payload' => $payload, 'signature_path' => $path]);
                 if ($slug === 'ilab') {
                     DB::table('ilab_requests')->insert(['forename' => $data['first_name'], 'surname' => $data['last_name'], 'date_sent' => now()]);
                 }
-                $this->delivery($request, config('is-tools.support_email') ?? '', 'IS Tools — '.$form['title'], $slug === 'cyber-incident-report' ? config('is-tools.igo_email') : null);
+                $subjects = ['ad' => 'New Request (Active Directory)', 'nimis' => 'New Request (NIMIS)', 'ilab' => 'New Request (iLab)',
+                    'drive' => 'New Request (Network Drive)', 'assetreq' => 'New Request (Asset Request)', 'software' => 'New Request (Software)',
+                    'joining' => 'New Request (Join)', 'moving' => 'New Request (Move)', 'leaving' => 'New Request (Leaving)',
+                    'cyber-incident-report' => 'Cyber Incident Report'];
+                $this->delivery($request, config('is-tools.support_email') ?? '', config('app.name').' - '.$subjects[$slug], $slug === 'cyber-incident-report' ? config('is-tools.igo_email') : null);
                 if ($slug === 'ilab') {
-                    $this->delivery($request, config('is-tools.ilab_email') ?? '', 'iLab Account Request — '.$data['first_name'].' '.$data['last_name'], config('is-tools.ilab_cc'), config('is-tools.ilab_bcc'));
+                    $this->delivery($request, config('is-tools.ilab_email') ?? '', 'iLab Account Request - '.$data['first_name'].' '.$data['last_name'], config('is-tools.ilab_cc'), config('is-tools.ilab_bcc'), 'ilab');
                 }
                 Audit::record('request.submitted', $request->id, ['form' => $slug]);
 
@@ -69,8 +77,8 @@ class SubmissionService
         }
     }
 
-    private function delivery(ServiceRequest $request, string $to, string $subject, ?string $cc = null, ?string $bcc = null): void
+    private function delivery(ServiceRequest $request, string $to, string $subject, ?string $cc = null, ?string $bcc = null, string $channel = 'support'): void
     {
-        Delivery::create(['request_id' => $request->id, 'recipient' => $to, 'subject' => $subject, 'cc' => $cc ?: null, 'bcc' => $bcc ?: null]);
+        Delivery::create(['request_id' => $request->id, 'recipient' => $to, 'subject' => $subject, 'cc' => $cc ?: null, 'bcc' => $bcc ?: null, 'channel' => $channel]);
     }
 }

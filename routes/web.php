@@ -42,6 +42,7 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
     Route::get('/data', [AdminController::class, 'data'])->name('admin.data');
     Route::post('/data/{table}', [AdminController::class, 'updateData'])->name('admin.data.update');
     Route::get('/deliveries', [AdminController::class, 'deliveries'])->name('admin.deliveries');
+    Route::post('/deliveries/test', [AdminController::class, 'testEmail'])->middleware('throttle:5,1')->name('admin.deliveries.test');
     Route::post('/deliveries/{delivery}/retry', [AdminController::class, 'retry'])->name('admin.deliveries.retry');
     Route::get('/document-archive', [AdminController::class, 'documents'])->name('admin.documents');
     Route::get('/documents/{path}', [AdminController::class, 'document'])->where('path', '.*')->name('admin.document');
@@ -50,6 +51,8 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
 });
 
 // Retain bookmarks without retaining executable legacy PHP scripts in public/.
+Route::view('/logout.php', 'auth.logout')->middleware('auth');
+Route::post('/api/account/logout.php', [AuthController::class, 'destroy'])->middleware('auth');
 foreach (['index' => '/', 'login' => '/login', 'forms' => '/forms', 'meetings' => '/meetings', 'meeting' => '/meetings/create',
     'requests' => '/requests', 'data' => '/data', 'apps' => '/apps', 'office365' => '/office365', 'about' => '/about', 'healthwellbeing' => '/healthwellbeing'] as $old => $new) {
     Route::get('/'.$old.'.php', fn () => redirect($new, 301));

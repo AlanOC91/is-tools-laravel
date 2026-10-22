@@ -15,4 +15,7 @@ public/build
 public/hot
 ssl/*
 tests
+compose.verify.yaml
+docs
+scripts
 .phpunit.cache

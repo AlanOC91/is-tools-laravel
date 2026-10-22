@@ -7,6 +7,7 @@ use App\Services\Audit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -52,7 +53,8 @@ class AdminController extends Controller
     public function retry(Delivery $delivery)
     {
         abort_if($delivery->state === 'sent', 409, 'This notification has already been sent.');
-        $delivery->update(['state' => 'pending', 'last_error' => null]);
+        $recipient = $delivery->recipient ?: config('is-tools.'.($delivery->channel === 'ilab' ? 'ilab_email' : 'support_email'));
+        $delivery->update(['state' => 'pending', 'last_error' => null, 'recipient' => $recipient ?? '']);
         Audit::record('delivery.retry', $delivery->id);
 
         return back()->with('success', 'Notification queued for another delivery attempt.');
@@ -83,5 +85,20 @@ class AdminController extends Controller
         }
 
         return response()->json(['status' => $up ? 'up' : 'down']);
+    }
+
+    public function testEmail(Request $request)
+    {
+        $data = $request->validate(['recipient' => 'required|email:rfc|max:255']);
+        try {
+            Mail::raw('This is a test message from St. John\'s Hospital IS Tools.', fn ($message) => $message->to($data['recipient'])->subject('IS Tools — email delivery test'));
+            Audit::record('mail.test', $data['recipient']);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return back()->withErrors(['recipient' => 'The mail server could not deliver the test message. Check the server log and mail configuration.']);
+        }
+
+        return back()->with('success', 'Test message submitted to the configured mail transport.');
     }
 }

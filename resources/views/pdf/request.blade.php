@@ -3,6 +3,7 @@
 <header><div>@if($logo)<img src="{{ $logo }}" alt="St. John's Hospital">@endif<br><small>Registered Charity No. 20000394</small></div><p>St. John's Hospital · Ospidéal Naomh Eoin<br>John's Square, Limerick, V94 H272, Ireland<br>Telephone: +353 61 462222<br>Information Systems Department</p></header>
 <p>PRIVATE &amp; CONFIDENTIAL · Not to be used for prescriptions</p><h1>{{ $form['title'] }}</h1><p>Request #{{ $submission->request_id }} · {{ $submission->request->submitted_date?->format('j F Y H:i') }}</p>
 @if($submission->form === 'ilab')<p>Please authorise the following user to the iLAB (APEX) system as detailed below.</p>@endif
+@if($submission->payload['_submitted_by'] ?? null)<p>Reporting / submitting staff member: <strong>{{ $submission->payload['_submitted_by'] }}</strong><br>{{ $submission->payload['_submitted_by_email'] ?? '' }}</p>@endif
 <dl>@foreach($form['fields'] as $key => $field)@if(filled($submission->payload[$key] ?? null))<dt>{{ $field['label'] }}</dt><dd>{{ is_array($submission->payload[$key]) ? implode(', ', $submission->payload[$key]) : $submission->payload[$key] }}</dd>@endif @endforeach</dl>
 @if($submission->form === 'ilab')<p>I acknowledge that this system will give me access to confidential data and commit to comply with the hospital's data protection and confidentiality requirements.</p>@endif
 @if($signature)<h3>Applicant signature</h3><img class="signature" src="{{ $signature }}" alt="Applicant signature">@endif
