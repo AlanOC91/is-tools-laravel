@@ -17,7 +17,7 @@ class PdfService
         }
         $form = FormCatalog::get($submission->form);
         $signature = $submission->signature_path ? 'data:image/png;base64,'.base64_encode($disk->get($submission->signature_path)) : null;
-        $logo = is_file(public_path('images/logo.jpg')) ? 'data:image/jpeg;base64,'.base64_encode(file_get_contents(public_path('images/logo.jpg'))) : null;
+        $logo = is_file(public_path('images/logo.png')) ? 'data:image/png;base64,'.base64_encode(file_get_contents(public_path('images/logo.png'))) : null;
         $html = view('pdf.request', compact('submission', 'form', 'signature', 'logo'))->render();
         $url = rtrim(config('is-tools.gotenberg_url'), '/');
         // Accept the old full endpoint as well as the service base URL.

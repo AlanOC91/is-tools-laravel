@@ -22,6 +22,8 @@ For F: drive folder enumeration, mount the host's accessible `Depts` directory r
 
 ## Transfer the files
 
+Compose bind-mounts that host directory at `/var/www/html/documents` for every application service. It stores both imported files and newly created signatures/PDFs outside the container filesystem, so rebuilding or replacing containers does not remove them. Leave `DOCUMENTS_PATH` unset or use `/var/www/html/documents` with this mount.
+
 Copy the live legacy `documents/` directory to this repository's `documents/`, retaining the complete structure:
 
 ```text

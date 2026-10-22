@@ -41,6 +41,12 @@ Inspected the guest portal at desktop and narrow/mobile widths and exercised the
 
 The final container also rendered the overview, request list and historical request details, meeting list and historical meeting details, reference data, notifications, document archive, Microsoft 365 links and attendance report against the real exported records. An actual HTTPS POST without a CSRF token returned 419; guest access to the administration request list redirected to sign-in. Form search correctly filtered the visible cards without horizontal overflow or console errors.
 
+## Hospital branding and file persistence update
+
+Removed the overview promotional banner and replaced promotional wording with direct IS Tools labels. Applied a hospital blue palette, copied the exact `public/assets/logo.png` from Document Compliance for navigation, login and PDF output, and set the support extension to 233. Browser checks of the HTTPS overview and sign-in page confirmed the logo loads, the banner is absent, blue buttons render correctly and the 390px mobile sign-in page has no horizontal overflow or console errors. The existing 58-test suite (338 assertions) and frontend build pass.
+
+Rebuilt the Docker image and forcibly recreated all application containers. SHA-256 checks from inside the recreated web container matched all 105 pre-existing host files, including 72 PNG signatures and 26 PDFs. This verifies the shared host `documents/` bind mount preserves saved files across rebuilds and recreation. A real Gotenberg iLab PDF with the new PNG logo also generated successfully; test database rows were rolled back and test files removed. No SMTP mail was sent.
+
 ## Server-side acceptance still required
 
 - Hospital-issued `apps` certificate and hospital CA trust for LDAP/SMTP (only self-signed local TLS was available).

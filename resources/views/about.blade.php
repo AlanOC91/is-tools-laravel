@@ -1,1 +1,12 @@
-<x-layout title="About IS Tools"><x-page-heading title="Built for our hospital" description="A shared workspace for staff at St. John's Hospital."/><div class="card p-8 max-w-3xl space-y-6 leading-7 text-slate-500"><img src="{{ asset('images/logo.jpg') }}" class="w-64" alt="St. John's Hospital"><p>IS Tools brings account requests, equipment and software access, staff changes, and meeting attendance into one place. The Information Systems department maintains the service.</p><h2 class="text-lg font-semibold">Getting started</h2><p>You can request a hospital login, NIMIS radiology account or iLab access without signing in. Use your hospital network credentials to access staff forms, record meetings and run attendance reports.</p><h2 class="text-lg font-semibold">Contact the IS team</h2><p>For help with this service, contact I.S. Support on extension <strong>{{ config('is-tools.support_extension') }}</strong>.@if(config('is-tools.support_email')) You can also <a class="text-link" href="mailto:{{ config('is-tools.support_email') }}">email the support team</a>.@endif</p><a class="text-link" href="{{ route('wellbeing') }}">Health &amp; wellbeing →</a></div></x-layout>
+<x-layout title="About IS Tools">
+    <x-page-heading title="IS Tools" description="St. John's Hospital IT request system"/>
+    <div class="card p-8 max-w-3xl space-y-6 leading-7 text-slate-500">
+        <img src="{{ asset('images/logo.png') }}" class="size-20 object-contain" alt="St. John's Hospital" width="80" height="80">
+        <p>IS Tools handles IT account requests, equipment and software access, staff changes, and meeting attendance for St. John's Hospital.</p>
+        <h2 class="text-lg font-semibold">Account requests</h2>
+        <p>Hospital login, NIMIS and iLab accounts can be requested without signing in. Other forms, meeting records and attendance reports require a hospital network account.</p>
+        <h2 class="text-lg font-semibold">I.S. Support</h2>
+        <p>Extension <strong>{{ config('is-tools.support_extension') }}</strong>.@if(config('is-tools.support_email')) <a class="text-link" href="mailto:{{ config('is-tools.support_email') }}">Email support</a>.@endif</p>
+        <a class="text-link" href="{{ route('wellbeing') }}">Health &amp; wellbeing →</a>
+    </div>
+</x-layout>

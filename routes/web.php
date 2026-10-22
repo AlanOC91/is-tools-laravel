@@ -18,7 +18,7 @@ Route::post('/logout', [AuthController::class, 'destroy'])->middleware('auth')->
 Route::get('/forms', [FormController::class, 'index'])->name('forms.index');
 Route::get('/forms/{form}', [FormController::class, 'show'])->where('form', implode('|', array_keys(FormCatalog::all())))->name('forms.show');
 Route::post('/forms/{form}', [FormController::class, 'store'])->where('form', implode('|', array_keys(FormCatalog::all())))->middleware('throttle:submissions')->name('forms.store');
-Route::get('/apps', fn () => view('links', ['section' => 'apps', 'title' => 'Hospital applications', 'description' => 'Your shortcuts to tools across the hospital.']))->name('apps');
+Route::get('/apps', fn () => view('links', ['section' => 'apps', 'title' => 'Hospital applications', 'description' => 'Internal hospital applications.']))->name('apps');
 Route::view('/about', 'about')->name('about');
 Route::view('/healthwellbeing', 'wellbeing')->name('wellbeing');
 
@@ -47,7 +47,7 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
     Route::get('/document-archive', [AdminController::class, 'documents'])->name('admin.documents');
     Route::get('/documents/{path}', [AdminController::class, 'document'])->where('path', '.*')->name('admin.document');
     Route::get('/service-health', [AdminController::class, 'health'])->name('admin.health');
-    Route::get('/office365', fn () => view('links', ['section' => 'office365', 'title' => 'Microsoft 365', 'description' => 'Administration shortcuts for the IS team.']))->name('office365');
+    Route::get('/office365', fn () => view('links', ['section' => 'office365', 'title' => 'Microsoft 365', 'description' => 'Microsoft 365 administration.']))->name('office365');
 });
 
 // Retain bookmarks without retaining executable legacy PHP scripts in public/.

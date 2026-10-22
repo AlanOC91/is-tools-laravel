@@ -3,7 +3,7 @@
 return [
     'company' => env('COMPANY_NAME', "St. John's Hospital"),
     'support_email' => env('SUPPORT_EMAIL'),
-    'support_extension' => env('SUPPORT_EXTENSION', '246'),
+    'support_extension' => env('SUPPORT_EXTENSION', '233'),
     'ilab_email' => env('ILAB_EMAIL'), 'ilab_cc' => env('ILAB_EMAIL_CC'), 'ilab_bcc' => env('ILAB_EMAIL_BCC'),
     'igo_email' => env('IGO_EMAIL'),
     'gotenberg_url' => env('GOTENBERG_URL', 'http://gotenberg:3000'),

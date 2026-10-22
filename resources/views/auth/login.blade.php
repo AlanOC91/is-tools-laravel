@@ -1,1 +1,36 @@
-<x-layout title="Staff sign in"><div class="login-layout"><div class="login-intro"><span class="eyebrow">ONE HOSPITAL. CONNECTED TOGETHER.</span><h1>Your everyday<br>tools start here.</h1><p>Use your hospital network account to manage requests, record teaching sessions and find the tools you need.</p><div class="login-benefit"><i data-lucide="shield-check"></i><span>Sign in with your existing hospital credentials.</span></div><div class="login-benefit"><i data-lucide="headset"></i><span>Need help? Call extension {{ config('is-tools.support_extension') }}.</span></div></div><div class="card login-card"><span class="icon-box"><i data-lucide="log-in"></i></span><h2>Welcome back</h2><p>Sign in to your staff workspace.</p>@if(isset($directoryError))<div class="notice error mt-5" role="alert">{{ $directoryError }}</div>@endif<form method="post" action="{{ route('login') }}" class="mt-7 space-y-5">@csrf<div><label for="username">Hospital account name</label><input class="input" id="username" name="username" value="{{ old('username') }}" autocomplete="username" placeholder="e.g. jane.smith" required maxlength="100" autofocus></div><div><label for="password">Password</label><input class="input" type="password" id="password" name="password" autocomplete="current-password" required></div><label class="flex gap-2 items-center text-sm"><input type="checkbox" name="remember" value="1"> Keep me signed in on this device</label><button class="btn btn-primary w-full">Sign in <i data-lucide="arrow-right"></i></button></form><div class="login-note">Don't have an account yet?<br><a class="text-link" href="{{ route('forms.show', 'ad') }}">Request a hospital login</a></div></div></div></x-layout>
+<x-layout title="Staff sign in">
+    <div class="login-layout">
+        <div class="card login-card">
+            <img src="{{ asset('images/logo.png') }}" alt="St. John's Hospital" class="login-logo" width="64" height="64">
+            <h1>IS Tools</h1>
+            <p>St. John's Hospital IT request system</p>
+            <h2>Staff sign in</h2>
+            <p>Use your hospital network account.</p>
+
+            @if(isset($directoryError))
+                <div class="notice error mt-5" role="alert">{{ $directoryError }}</div>
+            @endif
+
+            <form method="post" action="{{ route('login') }}" class="mt-7 space-y-5">
+                @csrf
+                <div>
+                    <label for="username">Hospital account name</label>
+                    <input class="input" id="username" name="username" value="{{ old('username') }}" autocomplete="username" placeholder="e.g. jane.smith" required maxlength="100" autofocus>
+                </div>
+                <div>
+                    <label for="password">Password</label>
+                    <input class="input" type="password" id="password" name="password" autocomplete="current-password" required>
+                </div>
+                <label class="flex gap-2 items-center text-sm">
+                    <input type="checkbox" name="remember" value="1"> Keep me signed in on this device
+                </label>
+                <button class="btn btn-primary w-full">Sign in <i data-lucide="arrow-right"></i></button>
+            </form>
+
+            <div class="login-note">
+                <a class="text-link" href="{{ route('forms.show', 'ad') }}">Request a hospital login</a>
+                <p>I.S. Support · Extension {{ config('is-tools.support_extension') }}</p>
+            </div>
+        </div>
+    </div>
+</x-layout>

@@ -14,6 +14,8 @@ x-application: &application
       max-file: "3"
   volumes:
     - ${IS_TOOLS_ENV_FILE:-./.env}:/var/www/html/.env:ro
+    # Signatures and saved PDFs persist on the host across rebuilds/recreation.
+    # This same directory is shared by Apache, the queue and scheduler.
     - ./documents:/var/www/html/documents
     - ./storage:/var/www/html/storage
     - ./ssl:/etc/apache2/ssl:ro

@@ -1,6 +1,6 @@
 # IS Tools
 
-St. John's Hospital staff portal, rebuilt in Laravel 13, Blade, Tailwind CSS and Alpine.js. Production URL: **https://apps:3071/**. Requires PHP 8.4+; the Docker image includes Apache, LDAP, MySQL and the frontend build.
+St. John's Hospital IT request system, rebuilt in Laravel 13, Blade, Tailwind CSS and Alpine.js. Production URL: **https://apps:3071/**. Requires PHP 8.4+; the Docker image includes Apache, LDAP, MySQL and the frontend build. The interface uses hospital blue and the same logo as Document Compliance. I.S. Support extension: **233**.
 
 The application uses the **existing `is_tools` database**, with the original IDs, tables, request states, group memberships and meeting history. Migrations adopt existing tables without rebuilding them. Additional submission, audit and notification tables support new requests. No production database connection or production write was used during development.
 
@@ -33,6 +33,22 @@ docker compose exec web php artisan is-tools:check --directory
 ```
 
 Compose runs an additive migration service before starting Apache, the queue worker and scheduler. TLS terminates in Apache on port 3071, following `sjl-document-compliance`. The production Compose file does not create a database service. Gotenberg has no published host port.
+
+## Persistent signatures and saved forms
+
+All signatures and saved form PDFs use the private `documents` disk. Docker mounts the repository's **host `documents/` folder** at `/var/www/html/documents` in the web, queue, scheduler and migration containers. Files survive image rebuilds, container recreation and `docker compose down` / `up`.
+
+| Host location | Contents |
+| --- | --- |
+| `documents/signatures/ad/` | Hospital login signatures |
+| `documents/signatures/nimis/` | NIMIS signatures |
+| `documents/signatures/ilab/` | iLab signatures |
+| `documents/signatures/assetreq/` | Equipment-loan signatures |
+| `documents/pdf/` | Saved iLab, cyber incident and legacy form PDFs |
+
+Copy the old production `documents/` **contents into this project's host `documents/` directory**, keeping filenames and subfolders unchanged. The old and new files use the same persistent mount. Existing records reference those filenames; no re-import of the database is needed for this file transfer. New form details and request history remain in the shared database.
+
+With the standard Docker configuration, leave `DOCUMENTS_PATH` unset or set it to `/var/www/html/documents`. A different path needs its own persistent mount. Back up the host `documents/` directory with the database. Documents remain private and are served through authorised application routes.
 
 ## Existing environment settings
 
